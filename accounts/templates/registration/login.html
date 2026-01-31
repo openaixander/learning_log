@@ -1,0 +1,30 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      Your username and password didn't match. Please try again.
+    </div>
+  {% endif %}
+
+  <div class="card shadow-sm" style="max-width: 400px; margin: 0 auto;">
+    <div class="card-header">Log in</div>
+    <div class="card-body">
+      
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        
+        {% bootstrap_form form %}
+        
+        {% bootstrap_button button_type="submit" content="Log in" %}
+        
+        <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
+      </form>
+      
+    </div>
+  </div>
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+
+  <div class="card shadow-sm" style="max-width: 400px; margin: 0 auto;">
+    <div class="card-header">Register an Account</div>
+    <div class="card-body">
+      
+      <form method="post" action="{% url 'accounts:register' %}">
+        {% csrf_token %}
+        
+        {% bootstrap_form form %}
+        
+        {% bootstrap_button button_type="submit" content="Register" %}
+        
+        <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
+      </form>
+      
+    </div>
+  </div>
+
+{% endblock content %}
