@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,8 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*+uzolbfrs@65$f2=3p9-g+)@qq@5a@!@@9(c#n02$-%=ki4bw'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-CHANGE_ME_LOCALLY')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+# Logic: If 'RENDER' exists in the environment, turn DEBUG OFF.
+if os.environ.get('RENDER'):
+    DEBUG = False
+else:
+    DEBUG = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,6 +87,7 @@ WSGI_APPLICATION = 'learning_log.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# Default to SQLite (Local)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -86,7 +95,10 @@ DATABASES = {
     }
 }
 
-
+# If we are on Render, OVERWRITE the database setting with the real Postgres DB
+db_from_env = dj_database_url.config(conn_max_age=500)
+if db_from_env:
+    DATABASES['default'] = db_from_env
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
